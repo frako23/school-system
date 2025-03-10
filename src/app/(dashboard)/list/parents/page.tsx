@@ -16,15 +16,15 @@ type Parent = {
 };
 
 const columns = [
-  { header: "Info", accesor: "info" },
+  { header: "Info", accessor: "info" },
   {
     header: "Student Names",
-    accesor: "students",
+    accessor: "students",
     className: "hidden md:table-cell",
   },
-  { header: "Phone", accesor: "phone", className: "hidden md:table-cell" },
-  { header: "Address", accesor: "address", className: "hidden md:table-cell" },
-  { header: "Actions", accesor: "actions", className: "hidden md:table-cell" },
+  { header: "Phone", accessor: "phone", className: "hidden md:table-cell" },
+  { header: "Address", accessor: "address", className: "hidden md:table-cell" },
+  { header: "Actions", accessor: "actions", className: "hidden md:table-cell" },
 ];
 
 const ParentListPage = () => {

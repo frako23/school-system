@@ -19,21 +19,21 @@ type Teacher = {
 };
 
 const columns = [
-  { header: "Info", accesor: "info" },
+  { header: "Info", accessor: "info" },
   {
     header: "TeacherId",
-    accesor: "teacherId",
+    accessor: "teacherId",
     className: "hidden md:table-cell",
   },
   {
     header: "Subjects",
-    accesor: "subjects",
+    accessor: "subjects",
     className: "hidden md:table-cell",
   },
-  { header: "Classes", accesor: "classes", className: "hidden md:table-cell" },
-  { header: "Phone", accesor: "phone", className: "hidden md:table-cell" },
-  { header: "Address", accesor: "address", className: "hidden md:table-cell" },
-  { header: "Actions", accesor: "actions", className: "hidden md:table-cell" },
+  { header: "Classes", accessor: "classes", className: "hidden md:table-cell" },
+  { header: "Phone", accessor: "phone", className: "hidden md:table-cell" },
+  { header: "Address", accessor: "address", className: "hidden md:table-cell" },
+  { header: "Actions", accessor: "actions", className: "hidden md:table-cell" },
 ];
 
 const TeachersListPage = () => {
