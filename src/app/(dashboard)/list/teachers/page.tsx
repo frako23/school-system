@@ -1,6 +1,7 @@
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
+import { role, teachersData } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -36,8 +37,8 @@ const columns = [
 ];
 
 const TeachersListPage = () => {
-  const renderRow = (item: Teacher) => {
-    <tr>
+  const renderRow = (item: Teacher) => (
+    <tr key={item.id}>
       <td>
         <Image
           src={item.photo}
@@ -58,11 +59,26 @@ const TeachersListPage = () => {
       <td className="hidden md:table-cell">{item.address}</td>
       <td>
         <div className="flex items-center gap-2">
-          <Link href={`/list/teachers/${item.id}`}></Link>
+          <Link href={`/list/teachers/${item.id}`}>
+            <button
+              className="w-7 h-7 flex items-center justify-center bg-lamaSky rounded-full"
+              title="View"
+            >
+              <Image src="/view.png" alt="" width={16} height={16} />
+            </button>
+          </Link>
+          {role === "admin" && (
+            <button
+              className="w-7 h-7 flex items-center justify-center bg-lamaPurple rounded-full"
+              title="Delete"
+            >
+              <Image src="/delete.png" alt="" width={16} height={16} />
+            </button>
+          )}
         </div>
       </td>
-    </tr>;
-  };
+    </tr>
+  );
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* ----------------------------------- TOP ---------------------------------- */}
@@ -93,7 +109,7 @@ const TeachersListPage = () => {
         </div>
       </div>
       {/* ---------------------------------- LIST ---------------------------------- */}
-      <Table columns={columns} />
+      <Table renderRow={renderRow} columns={columns} data={teachersData} />
       {/* ------------------------------- PAGINATION ------------------------------- */}
 
       <Pagination />
