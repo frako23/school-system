@@ -7,7 +7,7 @@ import Link from "next/link";
 import React from "react";
 
 type Parent = {
-  id: string;
+  id: number;
   name: string;
   students: string[];
   email?: string;

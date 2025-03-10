@@ -7,7 +7,7 @@ import Link from "next/link";
 import React from "react";
 
 type Subject = {
-  id: string;
+  id: number;
   name: string;
   teachers: string[];
 };

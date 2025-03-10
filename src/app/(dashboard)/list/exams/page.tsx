@@ -1,16 +1,17 @@
 import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
-import { classesData, lessonsData, role, subjectsData } from "@/lib/data";
+import { examsData, role } from "@/lib/data";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-type Lesson = {
+type Exam = {
   id: number;
   subject: string;
   class: number;
   teacher: string;
+  date: string;
 };
 
 const columns = [
@@ -24,11 +25,16 @@ const columns = [
     accessor: "grade",
     className: "hidden md:table-cell",
   },
+  {
+    header: "Date",
+    accessor: "date",
+    className: "hidden md:table-cell",
+  },
   { header: "Actions", accessor: "actions" },
 ];
 
-const LessonListPage = () => {
-  const renderRow = (item: Lesson) => (
+const ExamListPage = () => {
+  const renderRow = (item: Exam) => (
     <tr
       key={item.id}
       className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
@@ -36,6 +42,7 @@ const LessonListPage = () => {
       <td className="flex items-center gap-4 p-4">{item.subject}</td>
       <td>{item.class}</td>
       <td className="hidden md:table-cell">{item.teacher}</td>
+      <td className="hidden md:table-cell">{item.date}</td>
       <td>
         <div className="flex items-center gap-2">
           <Link href={`/list/teachers/${item.id}`}>
@@ -90,7 +97,7 @@ const LessonListPage = () => {
         </div>
       </div>
       {/* ---------------------------------- LIST ---------------------------------- */}
-      <Table renderRow={renderRow} columns={columns} data={lessonsData} />
+      <Table renderRow={renderRow} columns={columns} data={examsData} />
       {/* ------------------------------- PAGINATION ------------------------------- */}
 
       <Pagination />
@@ -98,4 +105,4 @@ const LessonListPage = () => {
   );
 };
 
-export default LessonListPage;
+export default ExamListPage;

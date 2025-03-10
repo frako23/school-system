@@ -7,7 +7,7 @@ import Link from "next/link";
 import React from "react";
 
 type Class = {
-  id: string;
+  id: number;
   name: string;
   capacity: number;
   grade: number;

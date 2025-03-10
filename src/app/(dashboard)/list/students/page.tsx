@@ -7,9 +7,9 @@ import Link from "next/link";
 import React from "react";
 
 type Student = {
-  id: string;
+  id: number;
   name: string;
-  studentId: string;
+  studentid: number;
   email?: string;
   photo: string;
   phone?: string;
