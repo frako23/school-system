@@ -9,7 +9,7 @@ import React from "react";
 type Teacher = {
   id: number;
   name: string;
-  teacherid: number;
+  teacherId: number;
   email?: string;
   photo: string;
   phone: string;
