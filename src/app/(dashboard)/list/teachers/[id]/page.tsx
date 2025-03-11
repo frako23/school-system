@@ -1,5 +1,6 @@
 import Announcements from "@/components/Announcements";
 import BigCalendar from "@/components/BigCalendar";
+import Performance from "@/components/Performance";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -112,7 +113,7 @@ const SingleTeacherPage = () => {
         </div>
         {/* --------------------------------- BOTTOM --------------------------------- */}
         <div className="mt-4 bg-white rounded-md p-4 h-[800px]">
-          <h1>Teacher's Schedule</h1>
+          <h1>Teacher&apos;s Schedule</h1>
           <BigCalendar />
         </div>
       </div>
@@ -122,22 +123,23 @@ const SingleTeacherPage = () => {
           <h1 className="text-xl font-semibold">Shortcuts</h1>
           <div className="mt-4 flex gap-4 flex-wrap text-xs text-gray-500">
             <Link href="" className="p-3 rounded-md bg-lamaSkyLight">
-              Teacher's Classes
+              Teacher&apos;s Classes
             </Link>
             <Link href="" className="p-3 rounded-md bg-lamaPurpleLight">
-              Teacher's Students
+              Teacher&apos;s Students
             </Link>
             <Link href="" className="p-3 rounded-md bg-lamaYellowLight">
-              Teacher's Lessons
+              Teacher&apos;s Lessons
             </Link>
             <Link href="" className="p-3 rounded-md bg-pink-50">
-              Teacher's Exams
+              Teacher&apos;s Exams
             </Link>
             <Link href="" className="p-3 rounded-md bg-lamaSkyLight">
-              Teacher's Assignments
+              Teacher&apos;s Assignments
             </Link>
           </div>
         </div>
+        <Performance />
         <Announcements />
       </div>
     </div>
