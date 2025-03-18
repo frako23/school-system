@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import InputField from "../InputField";
 
 const schema = z.object({
   username: z
@@ -22,6 +23,8 @@ const schema = z.object({
   img: z.instanceof(File, { message: "Image is requiered!" }),
 });
 
+type Inputs = z.infer<typeof schema>;
+
 const TeacherForm = ({
   type,
   data,
@@ -33,23 +36,44 @@ const TeacherForm = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm<Inputs>({ resolver: zodResolver(schema) });
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
 
   return (
-    <form className="flex flex-col gap-8">
+    <form className="flex flex-col gap-8" onSubmit={onSubmit}>
       <h1 className="text-xl font-semibold">Create a new teacher</h1>
       <span className="text-xs text-gray-400 font-medium">
         Authentication information
       </span>
-      <input
-        type="text"
-        {...register("username")}
-        className="ring-[1.5px] ring-gray-300 p-2 rounded-md text-sm"
+      <InputField
+        label="Username"
+        name="username"
+        defaultValue={data?.username}
+        register={register}
+        error={errors?.username}
       />
-      {errors.username?.message && <p>{errors.username?.message.toString()}</p>}
+      <InputField
+        label="Email"
+        name="email"
+        defaultValue={data?.email}
+        register={register}
+        error={errors?.email}
+      />
+      <InputField
+        label="Password"
+        name="password"
+        type="password"
+        defaultValue={data?.password}
+        register={register}
+        error={errors?.password}
+      />
       <span className="text-xs text-gray-400 font-medium">
         Personal information
       </span>
+      <button className="bg-blue-400 text-white p-2 rounded-md">Create</button>
     </form>
   );
 };
