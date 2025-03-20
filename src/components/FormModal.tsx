@@ -1,8 +1,34 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import React, { useState } from "react";
-import TeacherForm from "./forms/TeacherForm";
+// import TeacherForm from "./forms/TeacherForm";
+// import StudentForm from "./forms/StudentForm ";
+
+const TeacherForm = dynamic(() => import("./forms/TeacherForm"), {
+  loading: () => <h1>Loading...</h1>,
+});
+// const StudentForm = dynamic(() => import("./forms/StudentForm"), {
+//   loading: () => <h1>Loading...</h1>,
+// });
+
+const forms: {
+  [key: string]: (type: "create" | "update", data?: any) => JSX.Element;
+} = {
+  teacher: (type, data) => <TeacherForm type={type} data={data} />,
+  // student: (type, data) => <StudentForm type={type} data={data} />,
+  // parent: (type, data) => <TeacherForm type={type} data={data} />,
+  // subject: (type, data) => <TeacherForm type={type} data={data} />,
+  // class: (type, data) => <TeacherForm type={type} data={data} />,
+  // lesson: (type, data) => <TeacherForm type={type} data={data} />,
+  // exam: (type, data) => <TeacherForm type={type} data={data} />,
+  // assignment: (type, data) => <TeacherForm type={type} data={data} />,
+  // result: (type, data) => <TeacherForm type={type} data={data} />,
+  // attendance: (type, data) => <TeacherForm type={type} data={data} />,
+  // event: (type, data) => <TeacherForm type={type} data={data} />,
+  // announcement: (type, data) => <TeacherForm type={type} data={data} />,
+};
 
 const FormModal = ({
   table,
@@ -46,8 +72,10 @@ const FormModal = ({
           Delete
         </button>
       </form>
+    ) : type === "create" || type === "update" ? (
+      forms[table](type, data)
     ) : (
-      <TeacherForm type="create" />
+      "Form not found!"
     );
   };
 
