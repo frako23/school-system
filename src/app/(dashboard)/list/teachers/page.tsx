@@ -3,6 +3,7 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { role, teachersData } from "@/lib/data";
+import prisma from "@/lib/prisma";
 import { Class, Subject, Teacher } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -76,7 +77,10 @@ const renderRow = (item: TeacherList) => (
     </td>
   </tr>
 );
-const TeachersListPage = () => {
+const TeachersListPage = async () => {
+  const teachers = await prisma.teacher.findMany();
+
+  console.log(teachers);
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* ----------------------------------- TOP ---------------------------------- */}
