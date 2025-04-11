@@ -118,7 +118,7 @@ const StudentListPage = () => {
       <Table renderRow={renderRow} columns={columns} data={studentsData} />
       {/* ------------------------------- PAGINATION ------------------------------- */}
 
-      <Pagination />
+      {/* <Pagination page={p} count={count}/> */}
     </div>
   );
 };

@@ -10,7 +10,7 @@ const Pagination = ({ page, count }: { page: number; count: number }) => {
   const changePage = (newPage: number) => {
     const params = new URLSearchParams(window.location.search);
     params.set("page", newPage.toString());
-    router.push(`?${params.toString()}`);
+    router.push(`${window.location.pathname}?${params}`);
   };
 
   const hasPrev = ITEMS_PER_PAGE * (page - 1) > 0;
