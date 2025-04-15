@@ -27,7 +27,7 @@ const SingleTeacherPage = () => {
             <div className="w-full flex flex-col justify-between gap-4">
               <div className="flex items-center gap-4">
                 <h1 className="text-xl font-semibold">Leonard Snyder</h1>
-                <FormModal table="teacher" type="update" data={} />
+                <FormModal table="teacher" type="update" data={""} />
               </div>
               <p className="text-sm text-gray-500">
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere
@@ -129,7 +129,10 @@ const SingleTeacherPage = () => {
             <Link href="" className="p-3 rounded-md bg-lamaSkyLight">
               Teacher&apos;s Classes
             </Link>
-            <Link href="" className="p-3 rounded-md bg-lamaPurpleLight">
+            <Link
+              href={`/list/students/?teacherId=${`teacher2`}`}
+              className="p-3 rounded-md bg-lamaPurpleLight"
+            >
               Teacher&apos;s Students
             </Link>
             <Link href="" className="p-3 rounded-md bg-lamaYellowLight">
