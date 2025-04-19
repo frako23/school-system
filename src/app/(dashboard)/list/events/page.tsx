@@ -97,7 +97,7 @@ const EventListPage = () => {
                 className="w-8 h-8 flex items-center justify-center bg-lamaYellow rounded-full"
                 title="Add"
               >
-                <Image src="/plus.png" alt="Add" width={14} height={14} />
+                <Image src="/create.png" alt="Add" width={14} height={14} />
               </button>
             )}
           </div>
