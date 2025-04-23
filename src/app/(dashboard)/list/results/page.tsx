@@ -2,23 +2,26 @@ import Pagination from "@/components/Pagination";
 import Table from "@/components/Table";
 import TableSearch from "@/components/TableSearch";
 import { resultsData, role } from "@/lib/data";
+import prisma from "@/lib/prisma";
+import { ITEMS_PER_PAGE } from "@/lib/settings";
+import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
-type Result = {
+type ResultList = {
   id: number;
-  subject: string;
-  class: number;
-  teacher: string;
-  type: "exam" | "assignment";
+  title: string;
+  studentName: string;
+  studentSurname: string;
+  teacherName: string;
+  teacherSurname: string;
   score: number;
-  student: string;
-  date: string;
+  className: string;
+  startTime: Date;
 };
 
 const columns = [
-  { header: "Subject Name", accessor: "name" },
+  { header: "Title", accessor: "title" },
   {
     header: "Student",
     accessor: "studen",
@@ -47,40 +50,134 @@ const columns = [
   { header: "Actions", accessor: "actions" },
 ];
 
-const ResultListPage = () => {
-  const renderRow = (item: Result) => (
-    <tr
-      key={item.id}
-      className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
-    >
-      <td className="flex items-center gap-4 p-4">{item.subject}</td>
-      <td>{item.student}</td>
-      <td className="hidden md:table-cell">{item.score}</td>
-      <td className="hidden md:table-cell">{item.teacher}</td>
-      <td className="hidden md:table-cell">{item.class}</td>
-      <td className="hidden md:table-cell">{item.date}</td>
-      <td>
-        <div className="flex items-center gap-2">
-          <Link href={`/list/teachers/${item.id}`}>
-            <button
-              className="w-7 h-7 flex items-center justify-center bg-lamaSky rounded-full"
-              title="Edit"
-            >
-              <Image src="/edit.png" alt="" width={16} height={16} />
-            </button>
-          </Link>
-          {role === "admin" && (
-            <button
-              className="w-7 h-7 flex items-center justify-center bg-lamaPurple rounded-full"
-              title="Delete"
-            >
-              <Image src="/delete.png" alt="" width={16} height={16} />
-            </button>
-          )}
-        </div>
-      </td>
-    </tr>
-  );
+const renderRow = (item: ResultList) => (
+  <tr
+    key={item.id}
+    className="border-b border-gray-200 even:bg-slate-50 text-sm hover:bg-lamaPurpleLight"
+  >
+    <td className="flex items-center gap-4 p-4">{item.title}</td>
+    <td>{item.studentName + " " + item.studentSurname}</td>
+    <td className="hidden md:table-cell">{item.score}</td>
+    <td className="hidden md:table-cell">
+      {item.teacherName + " " + item.teacherSurname}
+    </td>
+    <td className="hidden md:table-cell">{item.className}</td>
+    <td className="hidden md:table-cell">
+      {new Intl.DateTimeFormat("en-US").format(item.startTime)}
+    </td>
+    <td>
+      <div className="flex items-center gap-2">
+        <Link href={`/list/teachers/${item.id}`}>
+          <button
+            className="w-7 h-7 flex items-center justify-center bg-lamaSky rounded-full"
+            title="Edit"
+          >
+            <Image src="/edit.png" alt="" width={16} height={16} />
+          </button>
+        </Link>
+        {role === "admin" && (
+          <button
+            className="w-7 h-7 flex items-center justify-center bg-lamaPurple rounded-full"
+            title="Delete"
+          >
+            <Image src="/delete.png" alt="" width={16} height={16} />
+          </button>
+        )}
+      </div>
+    </td>
+  </tr>
+);
+
+const ResultListPage = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | undefined };
+}) => {
+  const { page, ...queryParams } = searchParams;
+
+  const p = page ? parseInt(page) : 1;
+
+  // URL PARAMS CONDITION
+  const query: Prisma.ResultWhereInput = {};
+
+  if (queryParams) {
+    for (const [key, value] of Object.entries(queryParams)) {
+      if (value !== undefined) {
+        switch (key) {
+          case "studentId":
+            query.studentId = value;
+            break;
+          case "search":
+            query.OR = [
+              { exam: { title: { contains: value, mode: "insensitive" } } },
+              { student: { name: { contains: value, mode: "insensitive" } } },
+            ];
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const [dataRes, count] = await prisma.$transaction([
+    prisma.result.findMany({
+      where: query,
+      include: {
+        student: { select: { name: true, surname: true } },
+        exam: {
+          include: {
+            lesson: {
+              select: {
+                class: {
+                  select: { name: true },
+                },
+                teacher: { select: { name: true, surname: true } },
+              },
+            },
+          },
+        },
+        assignment: {
+          include: {
+            lesson: {
+              select: {
+                class: {
+                  select: { name: true },
+                },
+                teacher: { select: { name: true, surname: true } },
+              },
+            },
+          },
+        },
+      },
+      take: ITEMS_PER_PAGE,
+      skip: (p - 1) * ITEMS_PER_PAGE,
+    }),
+    prisma.result.count({
+      where: query,
+    }),
+  ]);
+
+  const data = dataRes.map((item) => {
+    const assesment = item.exam || item.assignment;
+
+    if (!assesment) return null; // Skip if no assessment found
+
+    const isExam = "startTime" in assesment;
+
+    return {
+      id: item.id,
+      title: assesment.title,
+      studentName: item.student.name,
+      studentSurname: item.student.surname,
+      teacherName: assesment.lesson.teacher.name,
+      teacherSurname: assesment.lesson.teacher.surname,
+      score: item.score,
+      className: assesment.lesson.class.name,
+      startTime: isExam ? assesment.startTime : assesment.startDate,
+    };
+  });
+
   return (
     <div className="bg-white p-4 rounded-md flex-1 m-4 mt-0">
       {/* ----------------------------------- TOP ---------------------------------- */}
@@ -113,10 +210,10 @@ const ResultListPage = () => {
         </div>
       </div>
       {/* ---------------------------------- LIST ---------------------------------- */}
-      <Table renderRow={renderRow} columns={columns} data={resultsData} />
+      <Table renderRow={renderRow} columns={columns} data={data} />
       {/* ------------------------------- PAGINATION ------------------------------- */}
 
-      <Pagination />
+      <Pagination page={p} count={count} />
     </div>
   );
 };
