@@ -3,7 +3,7 @@
 import * as Clerk from "@clerk/elements/common";
 import * as SignIn from "@clerk/elements/sign-in";
 
-function Homepage() {
+const LoginPage = () => {
   return (
     <div className="h-screen flex item-center justify-center bg-lamaSkyLight">
       <SignIn.Root>
@@ -29,6 +29,6 @@ function Homepage() {
       </SignIn.Root>
     </div>
   );
-}
+};
 
-export default Homepage;
+export default LoginPage;
