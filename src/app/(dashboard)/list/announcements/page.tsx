@@ -4,6 +4,7 @@ import TableSearch from "@/components/TableSearch";
 import { role } from "@/lib/data";
 import prisma from "@/lib/prisma";
 import { ITEMS_PER_PAGE } from "@/lib/settings";
+import { auth } from "@clerk/nextjs/server";
 import { Announcement, Class, Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,7 +23,7 @@ const columns = [
     accessor: "date",
     className: "hidden md:table-cell",
   },
-  { header: "Actions", accessor: "actions" },
+  ...(role === "admin" ? [{ header: "Actions", accessor: "actions" }] : []),
 ];
 
 const renderRow = (item: AnnouncementList) => (
@@ -64,7 +65,8 @@ const AnnouncementListPage = async ({
   searchParams: { [key: string]: string | undefined };
 }) => {
   const { page, ...queryParams } = searchParams;
-
+  const { sessionClaims } = await auth();
+  const role = (sessionClaims?.metadata as { role?: string })?.role as string;
   const p = page ? parseInt(page) : 1;
 
   // URL PARAMS CONDITION
